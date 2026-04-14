@@ -1,27 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=Lato:wght@300;400;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --neon-orange: #FF6B2B;
+    --neon-cyan: #00D4FF;
+    --neon-green: #00FF9C;
+    --acg-navy: #0D1B2A;
+    --acg-gold: #C9A84C;
+  }
+  body {
+    @apply bg-dark text-white antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .glass-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1rem;
+  }
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+  .glass-card-hover:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+  }
+  .neon-btn-green {
+    background: rgba(0,255,156,0.1);
+    border: 1px solid rgba(0,255,156,0.5);
+    color: #00FF9C;
+    @apply hover:bg-neon-green/20 transition-all duration-200 rounded-lg px-3 py-2 text-sm font-medium flex items-center gap-2;
+  }
+  .neon-btn-green:hover { border-color: #00FF9C; }
+  .neon-btn-orange {
+    background: rgba(255,107,43,0.1);
+    border: 1px solid rgba(255,107,43,0.5);
+    color: #FF6B2B;
+    @apply transition-all duration-200 rounded-lg px-3 py-2 text-sm font-medium flex items-center gap-2;
+  }
+  .neon-btn-orange:hover { background: rgba(255,107,43,0.2); border-color: #FF6B2B; }
+  .neon-btn-cyan {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.5);
+    color: #00D4FF;
+    @apply transition-all duration-200 rounded-lg px-3 py-2 text-sm font-medium flex items-center gap-2;
+  }
+  .neon-btn-cyan:hover { background: rgba(0,212,255,0.2); border-color: #00D4FF; }
+  .input-dark {
+    background: #141D2E;
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: text;
+    caret-color: #00D4FF;
+    @apply rounded-lg px-4 py-2.5 text-white placeholder-white/30 focus:outline-none transition-all duration-200 w-full;
+  }
+  .input-dark:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: #182235;
+  }
+  .input-dark:focus {
+    border-color: rgba(0,212,255,0.5);
+    box-shadow: 0 0 0 1px rgba(0,212,255,0.2);
+    background: #182235;
+  }
+  /* Kill browser autofill white flash */
+  .input-dark:-webkit-autofill,
+  .input-dark:-webkit-autofill:hover,
+  .input-dark:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #141D2E inset !important;
+    -webkit-text-fill-color: white !important;
+    border-color: rgba(255,255,255,0.1);
+  }
+  .label-dark {
+    @apply text-white/60 text-sm font-medium mb-1.5 block;
+  }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #C9A84C, #E8C97A, #C9A84C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
+  .glow-green { box-shadow: 0 0 20px rgba(0,255,156,0.15); }
+  .glow-orange { box-shadow: 0 0 20px rgba(255,107,43,0.15); }
+  .glow-cyan { box-shadow: 0 0 20px rgba(0,212,255,0.15); }
+  .bg-dark { background-color: #0A0F1A; }
 }

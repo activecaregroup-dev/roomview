@@ -1,8 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RoomView — ACG Room Management
 
-## Getting Started
+Tablet-first room management dashboard for Active Care Group. Real-time patient admit/discharge, TV screen view with PIN entry, site broadcast, and Snowflake backend.
 
-First, run the development server:
+## Setup
+
+### 1. Snowflake Schema
+
+Run `schema.sql` in your Snowflake worksheet to create the `DATAOPS_PROD.ROOMVIEW` schema and tables.
+
+### 2. Add your first site
+
+Run this SQL directly in Snowflake. Generate the bcrypt hash using the node command below.
+
+```sql
+INSERT INTO DATAOPS_PROD.ROOMVIEW.SITES (name, slug, email, password_hash)
+VALUES ('ACG Northside', 'acg-northside', 'admin@acgnorthside.com', '$2b$10$...');
+```
+
+**To generate a bcrypt hash:**
+```bash
+node -e "const b=require('bcryptjs'); b.hash('yourpassword', 10).then(h => console.log(h))"
+```
+
+### 3. Environment variables
+
+Fill in `.env.local`:
+
+```env
+SNOWFLAKE_ACCOUNT=ik70694.uk-south.azure
+SNOWFLAKE_USER=DATAOPS_SOLE_ADMIN
+SNOWFLAKE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
+...your key contents...
+-----END PRIVATE KEY-----"
+SNOWFLAKE_WAREHOUSE=COMPUTE_WH
+SNOWFLAKE_DATABASE=DATAOPS_PROD
+SNOWFLAKE_SCHEMA=ROOMVIEW
+SESSION_SECRET=your-long-random-secret-here
+```
+
+`SNOWFLAKE_PRIVATE_KEY` = full PEM key contents (not the path). On Vercel, paste the full key as a multi-line env var.
+
+### 4. Dev server
 
 ```bash
 npm run dev
