@@ -196,7 +196,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
         </div>
         <div style={{ textAlign: 'right' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/anlogo.jfif" alt="Active Neuro" style={{ height: 141, width: 'auto', objectFit: 'contain' }} />
+          <img src="/anlogo.jfif" alt="Active Neuro" style={{ height: 71, width: 'auto', objectFit: 'contain' }} />
         </div>
       </header>
 
@@ -206,7 +206,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
           border: '2px solid rgba(175,135,85,0.35)',
           borderRadius: 28,
           padding: '4.5rem 6rem',
-          maxWidth: 1200,
+          maxWidth: 1080,
           width: '100%',
           textAlign: 'center',
         }}>
@@ -214,7 +214,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
           {/* Name */}
           <h1 style={{
             fontFamily: 'Comfortaa, sans-serif',
-            fontSize: 'clamp(3.5rem, 8vw, 7rem)',
+            fontSize: 'clamp(1.75rem, 4vw, 3.5rem)',
             fontWeight: 600,
             color: '#6B1E3C',
             lineHeight: 1.1,
