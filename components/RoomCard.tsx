@@ -111,14 +111,33 @@ export default function RoomCard({ room, siteSlug, siteName, onRefresh }: Props)
             <div className="rounded-lg p-3" style={{ background: 'rgba(255,107,43,0.08)', border: '1px solid rgba(255,107,43,0.15)' }}
               onClick={e => e.stopPropagation()}>
               {editingName ? (
-                <input
-                  className="font-semibold text-white bg-transparent border-b border-neon-orange/50 focus:outline-none w-full"
-                  value={nameValue}
-                  autoFocus
-                  onChange={e => setNameValue(e.target.value)}
-                  onBlur={saveName}
-                  onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setNameValue(room.current_patient_name || ''); setEditingName(false) } }}
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    className="font-semibold text-white bg-transparent border-b border-neon-orange/50 focus:outline-none flex-1 min-w-0"
+                    value={nameValue}
+                    autoFocus
+                    onChange={e => setNameValue(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setNameValue(room.current_patient_name || ''); setEditingName(false) } }}
+                  />
+                  <button
+                    onMouseDown={e => { e.stopPropagation(); e.preventDefault(); saveName() }}
+                    className="text-neon-green hover:text-white transition-colors flex-shrink-0"
+                    title="Save"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </button>
+                  <button
+                    onMouseDown={e => { e.stopPropagation(); e.preventDefault(); setNameValue(room.current_patient_name || ''); setEditingName(false) }}
+                    className="text-white/30 hover:text-white transition-colors flex-shrink-0"
+                    title="Cancel"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </div>
               ) : (
                 <p
                   className="text-white font-semibold cursor-pointer hover:text-neon-orange transition-colors"
