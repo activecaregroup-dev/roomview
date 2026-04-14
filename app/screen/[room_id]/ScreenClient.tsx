@@ -35,10 +35,10 @@ function LiveClock({ light = false }: { light?: boolean }) {
   const date = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   return light ? (
     <div>
-      <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '2.4rem', fontWeight: 300, color: '#6B1E3C', letterSpacing: '0.04em', lineHeight: 1 }}>
+      <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '1.4rem', fontWeight: 300, color: '#6B1E3C', letterSpacing: '0.04em', lineHeight: 1 }}>
         {time}
       </div>
-      <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '1rem', color: 'rgba(107,30,60,0.5)', marginTop: 4 }}>
+      <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '0.75rem', color: 'rgba(107,30,60,0.5)', marginTop: 4 }}>
         {date}
       </div>
     </div>
@@ -227,7 +227,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
           {hasMessage && (
             <p style={{
               fontFamily: 'Nunito, sans-serif',
-              fontSize: 'clamp(1.2rem, 2.2vw, 1.7rem)',
+              fontSize: 'clamp(1.05rem, 2vw, 1.55rem)',
               color: '#6B1E3C',
               lineHeight: 1.65,
               fontWeight: 400,
