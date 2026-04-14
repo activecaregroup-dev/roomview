@@ -206,7 +206,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
           border: '2px solid rgba(175,135,85,0.35)',
           borderRadius: 28,
           padding: '4.5rem 6rem',
-          maxWidth: 1000,
+          maxWidth: 1200,
           width: '100%',
           textAlign: 'center',
         }}>
