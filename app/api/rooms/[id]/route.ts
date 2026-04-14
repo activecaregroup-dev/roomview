@@ -63,6 +63,14 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ ok: true })
   }
 
+  if (action === 'rename') {
+    const { patient_name } = body
+    await snowflakeQuery(`
+      UPDATE ROOMS SET current_patient_name = ? WHERE id = ? AND site_id = ?
+    `, [patient_name, params.id, session.siteId])
+    return NextResponse.json({ ok: true })
+  }
+
   if (action === 'refresh') {
     await snowflakeQuery(`
       UPDATE SCREENS SET last_updated_at = CURRENT_TIMESTAMP() WHERE room_id = ?

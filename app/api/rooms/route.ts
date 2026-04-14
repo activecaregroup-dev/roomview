@@ -14,7 +14,7 @@ export async function GET() {
     FROM ROOMS r
     LEFT JOIN SCREENS s ON s.room_id = r.id
     WHERE r.site_id = ?
-    ORDER BY r.room_number
+    ORDER BY TRY_TO_NUMBER(r.room_number), r.room_number
   `, [session.siteId])
 
   return NextResponse.json(rows)

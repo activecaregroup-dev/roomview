@@ -32,6 +32,19 @@ export default function RoomCard({ room, siteSlug, siteName, onRefresh }: Props)
   const [showUrl, setShowUrl] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
   const [pinVisible, setPinVisible] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [nameValue, setNameValue] = useState(room.current_patient_name || '')
+
+  async function saveName() {
+    setEditingName(false)
+    if (nameValue === room.current_patient_name) return
+    await fetch(`/api/rooms/${room.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'rename', patient_name: nameValue }),
+    })
+    onRefresh()
+  }
 
   const isOccupied = room.is_occupied === 'true' || room.is_occupied === true as unknown as string
 
@@ -95,8 +108,26 @@ export default function RoomCard({ room, siteSlug, siteName, onRefresh }: Props)
 
           {/* Patient info */}
           {isOccupied && (
-            <div className="rounded-lg p-3" style={{ background: 'rgba(255,107,43,0.08)', border: '1px solid rgba(255,107,43,0.15)' }}>
-              <p className="text-white font-semibold">{room.current_patient_name}</p>
+            <div className="rounded-lg p-3" style={{ background: 'rgba(255,107,43,0.08)', border: '1px solid rgba(255,107,43,0.15)' }}
+              onClick={e => e.stopPropagation()}>
+              {editingName ? (
+                <input
+                  className="font-semibold text-white bg-transparent border-b border-neon-orange/50 focus:outline-none w-full"
+                  value={nameValue}
+                  autoFocus
+                  onChange={e => setNameValue(e.target.value)}
+                  onBlur={saveName}
+                  onKeyDown={e => { if (e.key === 'Enter') saveName(); if (e.key === 'Escape') { setNameValue(room.current_patient_name || ''); setEditingName(false) } }}
+                />
+              ) : (
+                <p
+                  className="text-white font-semibold cursor-pointer hover:text-neon-orange transition-colors"
+                  title="Click to edit name"
+                  onClick={() => { setNameValue(room.current_patient_name || ''); setEditingName(true) }}
+                >
+                  {room.current_patient_name}
+                </p>
+              )}
               {room.admitted_at && (
                 <p className="text-white/40 text-xs mt-0.5">Admitted {formatTime(room.admitted_at)}</p>
               )}
