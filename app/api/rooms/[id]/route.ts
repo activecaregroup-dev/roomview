@@ -11,29 +11,19 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const { action } = body
 
   if (action === 'admit') {
-    const { patient_name, welcome_message, activities } = body
+    const { patient_name, welcome_message } = body
     await snowflakeQuery(`
       UPDATE ROOMS SET is_occupied = TRUE, current_patient_name = ?, admitted_at = CURRENT_TIMESTAMP()
       WHERE id = ? AND site_id = ?
     `, [patient_name, params.id, session.siteId])
 
-    // Get site defaults for anything not overridden
-    const [broadcast] = await snowflakeQuery<{ concierge_message: string; activities: string }>(`
-      SELECT concierge_message, activities FROM SITE_BROADCAST
-      WHERE site_id = ? ORDER BY pushed_at DESC LIMIT 1
-    `, [session.siteId])
+    const existingAdmit = await snowflakeQuery<{ room_id: string }>(`SELECT room_id FROM SCREENS WHERE room_id = ?`, [params.id])
+    if (existingAdmit.length > 0) {
+      await snowflakeQuery(`UPDATE SCREENS SET welcome_message = ?, last_updated_at = CURRENT_TIMESTAMP() WHERE room_id = ?`, [welcome_message || '', params.id])
+    } else {
+      await snowflakeQuery(`INSERT INTO SCREENS (room_id, welcome_message) VALUES (?, ?)`, [params.id, welcome_message || ''])
+    }
 
-    await snowflakeQuery(`
-      UPDATE SCREENS SET
-        welcome_message = ?,
-        activities = ?,
-        last_updated_at = CURRENT_TIMESTAMP()
-      WHERE room_id = ?
-    `, [
-      welcome_message || '',
-      activities || broadcast?.activities || '',
-      params.id,
-    ])
     return NextResponse.json({ ok: true })
   }
 
@@ -43,20 +33,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       WHERE id = ? AND site_id = ?
     `, [params.id, session.siteId])
 
-    // Reset screen to site defaults
-    const [broadcast] = await snowflakeQuery<{ concierge_message: string; activities: string }>(`
-      SELECT concierge_message, activities FROM SITE_BROADCAST
-      WHERE site_id = ? ORDER BY pushed_at DESC LIMIT 1
-    `, [session.siteId])
-
-    await snowflakeQuery(`
-      UPDATE SCREENS SET
-        welcome_message = NULL,
-        concierge_message = ?,
-        activities = ?,
-        last_updated_at = CURRENT_TIMESTAMP()
-      WHERE room_id = ?
-    `, [broadcast?.concierge_message || '', broadcast?.activities || '', params.id])
+    const existingDischarge = await snowflakeQuery<{ room_id: string }>(`SELECT room_id FROM SCREENS WHERE room_id = ?`, [params.id])
+    if (existingDischarge.length > 0) {
+      await snowflakeQuery(`UPDATE SCREENS SET welcome_message = NULL, last_updated_at = CURRENT_TIMESTAMP() WHERE room_id = ?`, [params.id])
+    } else {
+      await snowflakeQuery(`INSERT INTO SCREENS (room_id, welcome_message) VALUES (?, NULL)`, [params.id])
+    }
 
     return NextResponse.json({ ok: true })
   }
@@ -66,12 +48,17 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     await snowflakeQuery(`
       UPDATE ROOMS SET room_number = ?, location = ?, notes = ?, pin = ?
       WHERE id = ? AND site_id = ?
-    `, [room_number, location, notes, pin, params.id, session.siteId])
+    `, [room_number ?? '', location ?? '', notes ?? '', pin ?? '', params.id, session.siteId])
 
-    await snowflakeQuery(`
-      UPDATE SCREENS SET welcome_message = ?, last_updated_at = CURRENT_TIMESTAMP()
-      WHERE room_id = ?
-    `, [welcome_message, params.id])
+    // Only update SCREENS if welcome_message was explicitly sent (dashboard EditRoomModal)
+    if ('welcome_message' in body) {
+      const existing = await snowflakeQuery<{ room_id: string }>(`SELECT room_id FROM SCREENS WHERE room_id = ?`, [params.id])
+      if (existing.length > 0) {
+        await snowflakeQuery(`UPDATE SCREENS SET welcome_message = ?, last_updated_at = CURRENT_TIMESTAMP() WHERE room_id = ?`, [welcome_message ?? '', params.id])
+      } else {
+        await snowflakeQuery(`INSERT INTO SCREENS (room_id, welcome_message) VALUES (?, ?)`, [params.id, welcome_message ?? ''])
+      }
+    }
 
     return NextResponse.json({ ok: true })
   }

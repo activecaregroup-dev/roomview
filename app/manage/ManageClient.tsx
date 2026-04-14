@@ -135,9 +135,9 @@ export default function ManageClient({ session }: { session: SessionPayload }) {
                   <div className="flex items-center gap-2">
                     <span className="text-white font-semibold">Room {room.room_number}</span>
                     <span className={`text-xs px-2 py-0.5 rounded-full ${
-                      room.is_occupied === 'true' ? 'text-neon-orange bg-neon-orange/10' : 'text-neon-green bg-neon-green/10'
+                      (room.is_occupied === 'true' || room.is_occupied === true as unknown as string) ? 'text-neon-orange bg-neon-orange/10' : 'text-neon-green bg-neon-green/10'
                     }`}>
-                      {room.is_occupied === 'true' ? 'Occupied' : 'Vacant'}
+                      {(room.is_occupied === 'true' || room.is_occupied === true as unknown as string) ? 'Occupied' : 'Vacant'}
                     </span>
                   </div>
                   <div className="flex items-center gap-3 mt-0.5 text-xs text-white/40">
@@ -150,7 +150,7 @@ export default function ManageClient({ session }: { session: SessionPayload }) {
                   <button onClick={() => openEdit(room)} className="neon-btn-cyan py-1.5 text-xs">Edit</button>
                   <button
                     onClick={() => setDeleteRoom(room)}
-                    disabled={room.is_occupied === 'true'}
+                    disabled={room.is_occupied === 'true' || room.is_occupied === true as unknown as string}
                     className="text-xs px-3 py-1.5 rounded-lg border border-red-500/20 text-red-400/60 hover:text-red-400 hover:border-red-500/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
                   >
                     Delete
