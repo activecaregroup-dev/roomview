@@ -184,10 +184,10 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
   const hasMessage = !!data.welcome_message
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FFFFFF', display: 'flex', flexDirection: 'column', fontFamily: 'Lato, sans-serif' }}>
+    <div style={{ height: '100vh', maxHeight: '100vh', overflow: 'hidden', background: '#FFFFFF', display: 'flex', flexDirection: 'column', fontFamily: 'Lato, sans-serif' }}>
 
       {/* Header */}
-      <header style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '2.5rem 3.5rem' }}>
+      <header style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '1.25rem 3.5rem' }}>
         <div>
           <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '1.1rem', color: 'rgba(107,30,60,0.45)', letterSpacing: '0.05em', marginBottom: 10 }}>
             {data.site_name} · Room {data.room_number}
@@ -201,11 +201,11 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
       </header>
 
       {/* Main card */}
-      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem 5rem 3rem' }}>
+      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 5rem' }}>
         <div style={{
-          border: '2px solid rgba(175,135,85,0.35)',
+          border: '4px solid rgba(175,135,85,0.5)',
           borderRadius: 28,
-          padding: '4.5rem 6rem',
+          padding: '2.5rem 6rem',
           maxWidth: 1080,
           width: '100%',
           textAlign: 'center',
@@ -240,7 +240,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
       </main>
 
       {/* Bottom colour strip */}
-      <div style={{ display: 'flex', height: 90, flexShrink: 0 }}>
+      <div style={{ display: 'flex', height: 50, flexShrink: 0 }}>
         <div style={{ flex: 2.5, background: '#E0CFA8' }} />
         <div style={{ flex: 0.45, background: '#E06020' }} />
         <div style={{ flex: 3, background: '#6B1E3C' }} />
