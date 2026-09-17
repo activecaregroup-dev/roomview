@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { resolveTheme, type ScreenTheme } from '@/lib/themes'
 
 interface ScreenData {
   id: string;
@@ -14,6 +15,7 @@ interface ScreenData {
   activities: string;
   last_updated_at: string;
   site_name: string;
+  theme: string;
 }
 
 // ── ACG Logo ──────────────────────────────────────────────────────────────────
@@ -25,7 +27,8 @@ function ACGLogo({ size = 48 }: { size?: number }) {
 }
 
 // ── Live Clock ────────────────────────────────────────────────────────────────
-function LiveClock({ light = false }: { light?: boolean }) {
+function LiveClock({ light = false, theme }: { light?: boolean; theme?: ScreenTheme }) {
+  const th = theme ?? resolveTheme(null)
   const [now, setNow] = useState(new Date())
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000)
@@ -35,10 +38,10 @@ function LiveClock({ light = false }: { light?: boolean }) {
   const date = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
   return light ? (
     <div>
-      <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '1.4rem', fontWeight: 300, color: '#6B1E3C', letterSpacing: '0.04em', lineHeight: 1 }}>
+      <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '1.4rem', fontWeight: 300, color: th.text, letterSpacing: '0.04em', lineHeight: 1 }}>
         {time}
       </div>
-      <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '0.75rem', color: 'rgba(107,30,60,0.5)', marginTop: 4 }}>
+      <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '0.75rem', color: th.textSoft, marginTop: 4 }}>
         {date}
       </div>
     </div>
@@ -182,6 +185,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
   const isOccupied = data.is_occupied === 'true' || data.is_occupied === true as unknown as string
   const patientName = data.current_patient_name
   const hasMessage = !!data.welcome_message
+  const theme = resolveTheme(data.theme)
 
   return (
     <div style={{ height: '100vh', maxHeight: '100vh', overflow: 'hidden', background: '#FFFFFF', display: 'flex', flexDirection: 'column', fontFamily: 'Lato, sans-serif' }}>
@@ -189,21 +193,21 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
       {/* Header */}
       <header style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: '1.25rem 3.5rem' }}>
         <div>
-          <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '1.1rem', color: 'rgba(107,30,60,0.45)', letterSpacing: '0.05em', marginBottom: 10 }}>
+          <div style={{ fontFamily: 'Lato, sans-serif', fontSize: '1.1rem', color: theme.textFaint, letterSpacing: '0.05em', marginBottom: 10 }}>
             {data.site_name} · Room {data.room_number}
           </div>
-          <LiveClock light />
+          <LiveClock light theme={theme} />
         </div>
         <div style={{ textAlign: 'right' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/anlogo.jfif" alt="Active Neuro" style={{ height: 71, width: 'auto', objectFit: 'contain' }} />
+          <img src={theme.logoSrc} alt={theme.logoAlt} style={{ height: theme.logoHeight, width: 'auto', objectFit: 'contain' }} />
         </div>
       </header>
 
       {/* Main card */}
       <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 5rem' }}>
         <div style={{
-          border: '4px solid rgba(175,135,85,0.5)',
+          border: `4px solid ${theme.cardBorder}`,
           borderRadius: 28,
           padding: '2.5rem 6rem',
           maxWidth: 1080,
@@ -216,7 +220,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
             fontFamily: 'Comfortaa, sans-serif',
             fontSize: 'clamp(1.75rem, 4vw, 3.5rem)',
             fontWeight: 600,
-            color: '#6B1E3C',
+            color: theme.text,
             lineHeight: 1.1,
             marginBottom: hasMessage ? '2rem' : 0,
           }}>
@@ -228,7 +232,7 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
             <p style={{
               fontFamily: 'Nunito, sans-serif',
               fontSize: 'clamp(1.05rem, 2vw, 1.55rem)',
-              color: '#6B1E3C',
+              color: theme.text,
               lineHeight: 1.65,
               fontWeight: 400,
               whiteSpace: 'pre-line',
@@ -241,9 +245,9 @@ function WelcomeScreen({ data }: { data: ScreenData }) {
 
       {/* Bottom colour strip */}
       <div style={{ display: 'flex', height: 50, flexShrink: 0 }}>
-        <div style={{ flex: 2.5, background: '#E0CFA8' }} />
-        <div style={{ flex: 0.45, background: '#E06020' }} />
-        <div style={{ flex: 3, background: '#6B1E3C' }} />
+        <div style={{ flex: 2.5, background: theme.footer[0] }} />
+        <div style={{ flex: 0.45, background: theme.footer[1] }} />
+        <div style={{ flex: 3, background: theme.footer[2] }} />
       </div>
     </div>
   )

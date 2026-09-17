@@ -8,12 +8,12 @@ export async function GET(req: NextRequest, { params }: { params: { room_id: str
     id: string; room_number: string; location: string;
     is_occupied: string; current_patient_name: string; admitted_at: string;
     welcome_message: string; concierge_message: string; activities: string;
-    last_updated_at: string; pin: string; site_name: string;
+    last_updated_at: string; pin: string; site_name: string; theme: string;
   }>(`
     SELECT r.id, r.room_number, r.location, r.is_occupied,
            r.current_patient_name, r.admitted_at, r.pin,
            s.welcome_message, s.concierge_message, s.activities, s.last_updated_at,
-           si.name as site_name
+           si.name as site_name, si.theme
     FROM ROOMS r
     LEFT JOIN SCREENS s ON s.room_id = r.id
     LEFT JOIN SITES si ON si.id = r.site_id

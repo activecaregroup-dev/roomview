@@ -6,14 +6,14 @@ Tablet-first room management dashboard for Active Care Group. Real-time patient 
 
 ### 1. Snowflake Schema
 
-Run `schema.sql` in your Snowflake worksheet to create the `DATAOPS_PROD.ROOMVIEW` schema and tables.
+Run `schema.sql` in your Snowflake worksheet to create the `APP_BACKEND_PROD.COLLECTION` schema and tables.
 
 ### 2. Add your first site
 
 Run this SQL directly in Snowflake. Generate the bcrypt hash using the node command below.
 
 ```sql
-INSERT INTO DATAOPS_PROD.ROOMVIEW.SITES (name, slug, email, password_hash)
+INSERT INTO APP_BACKEND_PROD.COLLECTION.SITES (name, slug, email, password_hash)
 VALUES ('ACG Northside', 'acg-northside', 'admin@acgnorthside.com', '$2b$10$...');
 ```
 
@@ -28,13 +28,13 @@ Fill in `.env.local`:
 
 ```env
 SNOWFLAKE_ACCOUNT=ik70694.uk-south.azure
-SNOWFLAKE_USER=DATAOPS_SOLE_ADMIN
+SNOWFLAKE_USER=FEEDBACK_SVC
 SNOWFLAKE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
 ...your key contents...
 -----END PRIVATE KEY-----"
 SNOWFLAKE_WAREHOUSE=COMPUTE_WH
-SNOWFLAKE_DATABASE=DATAOPS_PROD
-SNOWFLAKE_SCHEMA=ROOMVIEW
+SNOWFLAKE_DATABASE=APP_BACKEND_PROD
+SNOWFLAKE_SCHEMA=COLLECTION
 SESSION_SECRET=your-long-random-secret-here
 ```
 
