@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import AdmitModal from './AdmitModal'
-// import DischargeModal from './DischargeModal'
+import DischargeModal from './DischargeModal'
 import EditRoomModal from './EditRoomModal'
 
 interface Room {
@@ -27,7 +27,7 @@ function formatTime(ts: string | null) {
 
 export default function RoomCard({ room, siteSlug, siteName, onRefresh }: Props) {
   const [showAdmit, setShowAdmit] = useState(false)
-  // const [showDischarge, setShowDischarge] = useState(false)
+  const [showDischarge, setShowDischarge] = useState(false)
   const [showEdit, setShowEdit] = useState(false)
   const [showUrl, setShowUrl] = useState(false)
   const [refreshing, setRefreshing] = useState(false)
@@ -167,7 +167,7 @@ export default function RoomCard({ room, siteSlug, siteName, onRefresh }: Props)
           {/* Row 1 — primary action + PIN */}
           <div className="flex items-center gap-2">
             {isOccupied ? (
-              <button onClick={e => { e.stopPropagation(); setShowEdit(true) }} className="neon-btn-orange flex-1 justify-center">
+              <button onClick={e => { e.stopPropagation(); setShowEdit(true) }} className="neon-btn-cyan flex-1 justify-center">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
@@ -216,6 +216,17 @@ export default function RoomCard({ room, siteSlug, siteName, onRefresh }: Props)
             </div>
           </div>
 
+          {/* Discharge — occupied only, own row so it can't be mis-tapped */}
+          {isOccupied && (
+            <button onClick={e => { e.stopPropagation(); setShowDischarge(true) }} className="neon-btn-orange w-full justify-center">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                <path d="M23 7l-3 3-3-3M20 10V4"/>
+              </svg>
+              Discharge
+            </button>
+          )}
+
           {/* Row 2 — screen utilities */}
           <div className="grid grid-cols-3 gap-1.5">
             <button onClick={e => { e.stopPropagation(); refreshScreen() }} disabled={refreshing}
@@ -252,7 +263,7 @@ export default function RoomCard({ room, siteSlug, siteName, onRefresh }: Props)
       </div>
 
       {showAdmit && <AdmitModal room={room} siteName={siteName} onClose={() => setShowAdmit(false)} onSuccess={() => { setShowAdmit(false); onRefresh() }} />}
-      {/* showDischarge && <DischargeModal room={room} onClose={() => setShowDischarge(false)} onSuccess={() => { setShowDischarge(false); onRefresh() }} /> */}
+      {showDischarge && <DischargeModal room={room} onClose={() => setShowDischarge(false)} onSuccess={() => { setShowDischarge(false); onRefresh() }} />}
       {showEdit && <EditRoomModal room={room} siteName={siteName} onClose={() => setShowEdit(false)} onSuccess={() => { setShowEdit(false); onRefresh() }} />}
 
       {showUrl && (

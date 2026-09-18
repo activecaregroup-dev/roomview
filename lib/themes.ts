@@ -26,7 +26,7 @@ export const THEMES: Record<string, ScreenTheme> = {
   },
   // Active Care Group — orange and aubergine
   acg: {
-    logoSrc: '/acglogo.png',
+    logoSrc: '/acglogo-wide.jpg',
     logoAlt: 'Active Care Group',
     logoHeight: 71,
     cardBorder: '#E06020',
