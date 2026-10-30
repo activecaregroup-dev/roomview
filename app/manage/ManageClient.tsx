@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { SessionPayload } from '@/lib/auth'
+import SiteSwitcher from '@/components/SiteSwitcher'
 
 interface Room {
   id: string; room_number: string; location: string; notes: string;
@@ -104,7 +105,7 @@ export default function ManageClient({ session }: { session: SessionPayload }) {
             </a>
             <div className="w-px h-5 bg-white/10" />
             <h1 className="text-white font-semibold">Manage Rooms</h1>
-            <span className="text-white/30 text-sm">{session.siteName}</span>
+            <SiteSwitcher session={session} className="text-white/30 text-sm" />
           </div>
           <button
             onClick={() => { setForm({ room_number: '', location: '', notes: '', pin: generatePin() }); setShowAdd(true) }}
