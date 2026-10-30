@@ -4,6 +4,8 @@ import { snowflakeQuery } from './snowflake';
 import bcrypt from 'bcryptjs';
 
 const SESSION_COOKIE = 'roomview_session';
+// Logging in as this site grants access to every other site via the header switcher
+export const ADMIN_SLUG = 'admin';
 const secret = new TextEncoder().encode(
   process.env.SESSION_SECRET || 'fallback-secret-change-me'
 );
@@ -12,6 +14,7 @@ export interface SessionPayload {
   siteId: string;
   siteSlug: string;
   siteName: string;
+  isAdmin?: boolean;
 }
 
 export async function createSession(payload: SessionPayload): Promise<string> {
@@ -45,7 +48,24 @@ export async function login(slug: string, password: string): Promise<string | nu
   const valid = await bcrypt.compare(password, site.password_hash);
   if (!valid) return null;
 
+  if (site.slug === ADMIN_SLUG) {
+    // The admin site has no rooms of its own — land on the first real site
+    const [first] = await snowflakeQuery<{ slug: string }>(
+      `SELECT slug FROM SITES WHERE slug <> ? ORDER BY name LIMIT 1`, [ADMIN_SLUG]
+    );
+    if (first) return switchSite(first.slug);
+  }
+
   return createSession({ siteId: site.id, siteSlug: site.slug, siteName: site.name });
+}
+
+// Admin-only: issue a session for another site, keeping admin rights
+export async function switchSite(slug: string): Promise<string | null> {
+  const [site] = await snowflakeQuery<{ id: string; name: string; slug: string }>(
+    `SELECT id, name, slug FROM SITES WHERE slug = ?`, [slug]
+  );
+  if (!site) return null;
+  return createSession({ siteId: site.id, siteSlug: site.slug, siteName: site.name, isAdmin: true });
 }
 
 export async function getSites(): Promise<{ name: string; slug: string }[]> {

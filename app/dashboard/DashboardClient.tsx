@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import RoomCard from '@/components/RoomCard'
+import SiteSwitcher from '@/components/SiteSwitcher'
 // import BroadcastPanel from '@/components/BroadcastPanel'
 import type { SessionPayload } from '@/lib/auth'
 
@@ -48,7 +49,7 @@ export default function DashboardClient({ session }: { session: SessionPayload }
               <span className="text-white font-semibold">RoomView</span>
             </div>
             <span className="text-white/20">|</span>
-            <span className="text-white/60 text-sm">{session.siteName}</span>
+            <SiteSwitcher session={session} className="text-white/60 text-sm" />
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3 text-sm">
